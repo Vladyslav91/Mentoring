@@ -1,6 +1,6 @@
-package com.epam.training.toto.domain;
+package com.epam.training.toto.Enums;
 
-public enum Outcome {
+public enum OutcomeEnum {
 
     ONE("1"),
     TWO("2"),
@@ -8,7 +8,7 @@ public enum Outcome {
 
     private final String value;
 
-    private Outcome(String value) {
+    OutcomeEnum(String value) {
         this.value = value;
     }
 

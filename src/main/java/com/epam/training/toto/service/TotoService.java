@@ -1,19 +1,15 @@
 package com.epam.training.toto.service;
 
 import com.epam.training.toto.ResultDto;
-import com.epam.training.toto.domain.Round;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TotoService {
-
-    private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
 
     public static List<ResultDto> readFile(final String dataFile) {
         String cvsSplitBy = ";";
@@ -23,12 +19,11 @@ public class TotoService {
 
         try {
             bufferedReader = new BufferedReader(new FileReader(dataFile));
+
             while ((line = bufferedReader.readLine()) != null) {
                 String[] betResults = line.split(cvsSplitBy);
-
                 ResultDto roundResult = buildResultDto(betResults);
                 resultList.add(roundResult);
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,46 +51,28 @@ public class TotoService {
                 .build();
     }
 
-    public static int getLargestPrize(List<ResultDto> resultList) {
+    static int getLargestPrize(List<ResultDto> resultList) {
         int[] resultArray = getAllPrizeValues(resultList);
         Arrays.sort(resultArray);
         return resultArray[resultArray.length - 1];
     }
 
-    public static int[] getAllPrizeValues(List<ResultDto> resultList) {
-        int[] prizesValues = new int[resultList.size()*5];
+    private static int[] getAllPrizeValues(List<ResultDto> resultList) {
+        int[] prizesValues = new int[resultList.size() * 5];
         int index = 0;
-        for(int i = 0; i < resultList.size(); i++) {
-            prizesValues[index] = formatPriceValue(resultList.get(i).getPrizeFor14Hits());
+        for (ResultDto aResultList : resultList) {
+            prizesValues[index] = FormatCheckService.formatPriceValue(aResultList.getPrizeFor14Hits());
             index++;
-            prizesValues[index] = formatPriceValue(resultList.get(i).getPrizeFor13Hits());
+            prizesValues[index] = FormatCheckService.formatPriceValue(aResultList.getPrizeFor13Hits());
             index++;
-            prizesValues[index] = formatPriceValue(resultList.get(i).getPrizeFor12Hits());
+            prizesValues[index] = FormatCheckService.formatPriceValue(aResultList.getPrizeFor12Hits());
             index++;
-            prizesValues[index] = formatPriceValue(resultList.get(i).getPrizeFor11Hits());
+            prizesValues[index] = FormatCheckService.formatPriceValue(aResultList.getPrizeFor11Hits());
             index++;
-            prizesValues[index] = formatPriceValue(resultList.get(i).getPrizeFor10Hits());
+            prizesValues[index] = FormatCheckService.formatPriceValue(aResultList.getPrizeFor10Hits());
             index++;
         }
         return prizesValues;
     }
 
-    public static int formatPriceValue(String priceValue) {
-        return Integer.parseInt(priceValue.replaceAll("\\D", ""));
-    }
-
-
-    public static void printEachRoundTeamResult(List<ResultDto> resultList) {
-        double[][] teamResults = Round.getAllRoundsResults(resultList);
-        for (double[] teamResult : teamResults) {
-            System.out.println(String.format("team #1 won: %s %%, team #2 won: %s %%, draw: %s %%",
-                    decimalFormat.format(teamResult[0]),
-                    decimalFormat.format(teamResult[1]),
-                    decimalFormat.format(teamResult[2])));
-        }
-    }
-
-    public static void printLargestPrize(List<ResultDto> resultList) {
-        System.out.println("Largest prize ever recorded is: " + TotoService.getLargestPrize(resultList) + " !");
-    }
 }
