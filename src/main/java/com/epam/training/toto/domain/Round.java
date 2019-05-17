@@ -15,16 +15,16 @@ public class Round {
     public static Map<Integer, List<String>> incorrectDataStrings = new TreeMap<>();
     private static int winVariants = OutcomeEnum.values().length;
 
-    public static double[][] getAllRoundsResults(List<ResultDto> resultList) {
+    public static double[][] getAllGamesEachTeamResults(List<ResultDto> resultList) {
         double[][] outcomesList = new double[resultList.size()][winVariants];
 
         for (int i = 0; i < outcomesList.length; i++) {
-            outcomesList[i] = getRoundResult(resultList.get(i).getOutcomes(), ++i);
+            outcomesList[i] = getGameEachTeamResults(resultList.get(i).getOutcomes(), ++i);
         }
         return outcomesList;
     }
 
-    private static double[] getRoundResult(String[] outcomes, int stringNumber) {
+    private static double[] getGameEachTeamResults(String[] outcomes, int stringNumber) {
         int team1, team2, draw;
         team1 = team2 = draw = 0;
         double[] result = new double[winVariants];
@@ -62,5 +62,28 @@ public class Round {
         return result;
     }
 
+    public static String[] getOutcomesListByDateValue(List<ResultDto> resultDtoList, String dateValue) {
+        String[] actualOutcomes;
+        int actualStringIndex;
 
+        for (int i = 0; i < resultDtoList.size(); i++) {
+            if (dateValue.equals(resultDtoList.get(i).getDate())) {
+                 actualOutcomes = resultDtoList.get(i).getOutcomes();
+                 actualStringIndex = i;
+            }
+        }
+
+//        compareOutcomes()
+
+        return new String[0];
+    }
+
+    public static boolean checkResultWithDateExist(List<ResultDto> resultDtoList, String enteredDate) {
+        for(ResultDto resultDto : resultDtoList) {
+            if (enteredDate.equals(resultDto.getDate())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
