@@ -1,7 +1,9 @@
 package com.epam.training.toto.service;
 
 import com.epam.training.toto.ResultDto;
+import com.epam.training.toto.domain.Hit;
 import com.epam.training.toto.domain.Round;
+import javafx.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,11 +44,13 @@ public class PrintService {
     public void calcHitsAndPrizeForWager(List<ResultDto> resultDtoList) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+        // Read from console
         String enteredDate = "";
         System.out.println("Enter date: \n");
-        for(int i = 0; i <= maxEnterAttempts; i++) {
-            enteredDate = br.readLine();
-            if (!FormatCheckService.validateDateFormat(enteredDate)) {
+        for (int i = 0; i <= maxEnterAttempts; i++) {
+            enteredDate = "2015.10.29";
+//            enteredDate = br.readLine();
+            if (FormatCheckService.validateDateFormat(enteredDate)) {
                 if (Round.checkResultWithDateExist(resultDtoList, enteredDate)) {
                     break;
                 } else {
@@ -57,10 +61,19 @@ public class PrintService {
                     "\n Reenter date please: \n");
         }
 
-
         System.out.println("Enter outcomes (1/2/X): \n");
-        String enteredOutcome = br.readLine();
+        String enteredOutcome = "2;1;1;1;2;2;2;1;2;1;1;1;1;+2";
+//        String enteredOutcome = br.readLine();
 
-        Round.getOutcomesListByDateValue(resultDtoList, enteredDate);
+        // Compare outcomes
+        Pair<Integer, String[]> pairIndexOutcomes = Round.getResultIndexAndOutcomesListByDateValue(resultDtoList, enteredDate);
+        int equalPairs = Hit.compareOutcomes(enteredOutcome, pairIndexOutcomes.getValue());
+        if (equalPairs < 10) {
+            System.out.println("You loose all...try again.");
+            calcHitsAndPrizeForWager(resultDtoList);
+        }
+
+        String prizeValue = Hit.getPrizeByHits(equalPairs, pairIndexOutcomes.getKey(), resultDtoList);
+        System.out.println("Congrats! You won: " + prizeValue);
     }
 }

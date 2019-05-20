@@ -4,11 +4,13 @@ import com.epam.training.toto.Enums.OutcomeEnum;
 import com.epam.training.toto.ResultDto;
 import com.epam.training.toto.service.CalculationService;
 import com.epam.training.toto.service.FormatCheckService;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 
 public class Round {
 
@@ -62,28 +64,26 @@ public class Round {
         return result;
     }
 
-    public static String[] getOutcomesListByDateValue(List<ResultDto> resultDtoList, String dateValue) {
-        String[] actualOutcomes;
-        int actualStringIndex;
+    public static Pair<Integer, String[]> getResultIndexAndOutcomesListByDateValue(List<ResultDto> resultDtoList, String dateValue) {
+        String[] actualOutcomes = new String[0];
+        int actualStringIndex = 0;
 
         for (int i = 0; i < resultDtoList.size(); i++) {
             if (dateValue.equals(resultDtoList.get(i).getDate())) {
-                 actualOutcomes = resultDtoList.get(i).getOutcomes();
-                 actualStringIndex = i;
+                actualOutcomes = resultDtoList.get(i).getOutcomes();
+                actualStringIndex = i;
             }
         }
-
-//        compareOutcomes()
-
-        return new String[0];
+        return new Pair<>(actualStringIndex, actualOutcomes);
     }
 
     public static boolean checkResultWithDateExist(List<ResultDto> resultDtoList, String enteredDate) {
-        for(ResultDto resultDto : resultDtoList) {
+        for (ResultDto resultDto : resultDtoList) {
             if (enteredDate.equals(resultDto.getDate())) {
                 return true;
             }
         }
         return false;
     }
+
 }
