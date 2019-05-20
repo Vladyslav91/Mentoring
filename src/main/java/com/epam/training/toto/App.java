@@ -19,14 +19,13 @@ public class App {
         List<ResultDto> resultListTask3 = TotoService.readFile(dataFileT3);
 
         // 1
-//        printService.printLargestPrize(resultList);
+        printService.printLargestPrize(resultList);
 
         // 2
-//        printService.printEachRoundTeamResult(resultList);
-//        printService.printEachRoundTeamResultIncorrectStrings();
+        printService.printEachRoundTeamResult(resultList);
+        printService.printEachRoundTeamResultIncorrectStrings();
 
         // 3
-        printService.calcHitsAndPrizeForWager(resultListTask3);
-
+        printService.printWonPrize(resultListTask3);
     }
 }

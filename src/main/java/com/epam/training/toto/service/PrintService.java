@@ -5,9 +5,7 @@ import com.epam.training.toto.domain.Hit;
 import com.epam.training.toto.domain.Round;
 import javafx.util.Pair;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,7 @@ import java.util.Map;
 public class PrintService {
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
-    private int maxEnterAttempts = 3;
+    private static final Hit hit = new Hit();
 
     public void printEachRoundTeamResult(List<ResultDto> resultList) {
         double[][] teamResults = Round.getAllGamesEachTeamResults(resultList);
@@ -41,39 +39,9 @@ public class PrintService {
         System.out.println("Largest prize ever recorded is: " + TotoService.getLargestPrize(resultList) + " !\n");
     }
 
-    public void calcHitsAndPrizeForWager(List<ResultDto> resultDtoList) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        // Read from console
-        String enteredDate = "";
-        System.out.println("Enter date: \n");
-        for (int i = 0; i <= maxEnterAttempts; i++) {
-            enteredDate = "2015.10.29";
-//            enteredDate = br.readLine();
-            if (FormatCheckService.validateDateFormat(enteredDate)) {
-                if (Round.checkResultWithDateExist(resultDtoList, enteredDate)) {
-                    break;
-                } else {
-                    System.out.println("There is no result by this date.\nTry another date: ");
-                }
-            }
-            System.out.println("Date format should be: " + FormatCheckService.DATE_FORMAT +
-                    "\n Reenter date please: \n");
-        }
-
-        System.out.println("Enter outcomes (1/2/X): \n");
-        String enteredOutcome = "2;1;1;1;2;2;2;1;2;1;1;1;1;+2";
-//        String enteredOutcome = br.readLine();
-
-        // Compare outcomes
-        Pair<Integer, String[]> pairIndexOutcomes = Round.getResultIndexAndOutcomesListByDateValue(resultDtoList, enteredDate);
-        int equalPairs = Hit.compareOutcomes(enteredOutcome, pairIndexOutcomes.getValue());
-        if (equalPairs < 10) {
-            System.out.println("You loose all...try again.");
-            calcHitsAndPrizeForWager(resultDtoList);
-        }
-
-        String prizeValue = Hit.getPrizeByHits(equalPairs, pairIndexOutcomes.getKey(), resultDtoList);
-        System.out.println("Congrats! You won: " + prizeValue);
+    public void printWonPrize(List<ResultDto> resultDtoList) throws IOException {
+        Pair<Integer, String> pairHitsPrize = hit.getHitsAndPrizeForWager(resultDtoList);
+        System.out.println(String.format("Result: hits: %s, amount: %s", pairHitsPrize.getKey(), pairHitsPrize.getValue()));
     }
+
 }

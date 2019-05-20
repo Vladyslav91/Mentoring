@@ -19,7 +19,6 @@ public class TotoService {
 
         try {
             bufferedReader = new BufferedReader(new FileReader(dataFile));
-
             while ((line = bufferedReader.readLine()) != null) {
                 String[] betResults = line.split(cvsSplitBy);
                 ResultDto roundResult = buildResultDto(betResults);
