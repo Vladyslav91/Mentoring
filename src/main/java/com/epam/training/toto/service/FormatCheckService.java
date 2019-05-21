@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 
 public class FormatCheckService {
 
-    public String DATE_FORMAT = "yyyy.MM.dd";
+    String DATE_FORMAT = "yyyy.MM.dd";
 
     static int formatPriceValue(String priceValue) {
         return Integer.parseInt(priceValue.replaceAll("\\D", ""));
@@ -28,7 +28,7 @@ public class FormatCheckService {
         return dataString.replaceAll("([^X|\\d])", "").toUpperCase();
     }
 
-    public boolean validateDateFormat(String dateToValidate) {
+    boolean validateDateFormat(String dateToValidate) {
         if (dateToValidate == null) {
             return false;
         }

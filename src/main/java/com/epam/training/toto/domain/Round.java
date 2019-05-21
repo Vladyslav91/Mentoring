@@ -15,8 +15,8 @@ public class Round {
 
     private static int winVariants = OutcomeEnum.values().length;
     public Map<Integer, List<String>> incorrectDataStrings = new TreeMap<>();
-    private FormatCheckService formatCheckService;
-    private CalculationService calculationService;
+    private FormatCheckService formatCheckService = new FormatCheckService();
+    private CalculationService calculationService = new CalculationService();
 
     public double[][] getAllGamesEachTeamResults(List<ResultDto> resultList) {
         double[][] outcomesList = new double[resultList.size()][winVariants];

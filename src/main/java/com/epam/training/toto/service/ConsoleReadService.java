@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ConsoleReadService {
 
-    private FormatCheckService formatCheckService;
-    private Round round;
+    private FormatCheckService formatCheckService = new FormatCheckService();
+    private Round round = new Round();
 
     private int maxEnterAttempts = 3;
 
@@ -35,10 +35,15 @@ public class ConsoleReadService {
         return enteredDate;
     }
 
-    public String getOutcomeFromConsole() throws IOException {
+    public String[] getOutcomeFromConsole() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter outcomes (1/2/X): \n");
-        String enteredOutcome = br.readLine();// "2;1;1;1;2;2;2;1;2;1;1;1;1;+2"
+        String enteredData = br.readLine();// "2;1;1;1;2;2;2;1;2;1;1;1;1;+2"
+        String[] enteredOutcome = enteredData.split(";");
+        if(enteredOutcome.length != 14) {
+            System.out.println("Enter 14 numbers to place a bet:");
+            getOutcomeFromConsole();
+        }
         return enteredOutcome;
     }
 }

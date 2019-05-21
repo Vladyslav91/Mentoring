@@ -14,8 +14,8 @@ public class PrintService {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("##.##");
     private final Hit hit = new Hit();
-    private TotoService totoService;
-    private Round round;
+    private TotoService totoService = new TotoService();
+    private Round round =  new Round();
 
     public void printEachRoundTeamResult(List<ResultDto> resultList) {
         double[][] teamResults = round.getAllGamesEachTeamResults(resultList);
