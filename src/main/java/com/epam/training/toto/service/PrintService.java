@@ -12,11 +12,13 @@ import java.util.Map;
 
 public class PrintService {
 
-    private static final DecimalFormat decimalFormat = new DecimalFormat("##.##");
-    private static final Hit hit = new Hit();
+    private final DecimalFormat decimalFormat = new DecimalFormat("##.##");
+    private final Hit hit = new Hit();
+    private TotoService totoService;
+    private Round round;
 
     public void printEachRoundTeamResult(List<ResultDto> resultList) {
-        double[][] teamResults = Round.getAllGamesEachTeamResults(resultList);
+        double[][] teamResults = round.getAllGamesEachTeamResults(resultList);
         for (double[] teamResult : teamResults) {
             System.out.println(String.format("team #1 won: %s %%, team #2 won: %s %%, draw: %s %%",
                     decimalFormat.format(teamResult[0]),
@@ -26,7 +28,7 @@ public class PrintService {
     }
 
     public void printEachRoundTeamResultIncorrectStrings() {
-        Map<Integer, List<String>> incorrectDataStrings = Round.incorrectDataStrings;
+        Map<Integer, List<String>> incorrectDataStrings = round.incorrectDataStrings;
         if (!incorrectDataStrings.isEmpty()) {
             System.out.println("\nResults with incorrect data: \n\n String #        Outcomes");
             for (Map.Entry entry : incorrectDataStrings.entrySet()) {
@@ -36,7 +38,7 @@ public class PrintService {
     }
 
     public void printLargestPrize(List<ResultDto> resultList) {
-        System.out.println("Largest prize ever recorded is: " + TotoService.getLargestPrize(resultList) + " !\n");
+        System.out.println("Largest prize ever recorded is: " + totoService.getLargestPrize(resultList) + " !\n");
     }
 
     public void printWonPrize(List<ResultDto> resultDtoList) throws IOException {

@@ -2,61 +2,47 @@ package com.epam.training.toto.service;
 
 import com.epam.training.toto.ResultDto;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TotoService {
 
-    public static List<ResultDto> readFile(final String dataFile) {
-        String cvsSplitBy = ";";
-        BufferedReader bufferedReader;
-        String line;
-        List<ResultDto> resultList = new ArrayList<>();
-
-        try {
-            bufferedReader = new BufferedReader(new FileReader(dataFile));
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] betResults = line.split(cvsSplitBy);
-                ResultDto roundResult = buildResultDto(betResults);
-                resultList.add(roundResult);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public List<ResultDto> getResultDtosFromFile(List<String> fileLines) {
+        List<ResultDto> resultDtos = new ArrayList<>();
+        for (String line : fileLines) {
+            resultDtos.add(buildResultDto(line.split(";")));
         }
-        return resultList;
+        return resultDtos;
     }
 
-    private static ResultDto buildResultDto(String[] betResults) {
-        return new ResultDto.Builder()
-                .setYear(betResults[0])
-                .setWeek(betResults[1])
-                .setRound(betResults[2])
-                .setDate(betResults[3])
-                .setNumberOfGamesWith14Hits(betResults[4])
-                .setPrizeFor14Hits(betResults[5])
-                .setNumberOfGamesWith13Hits(betResults[6])
-                .setPrizeFor13Hits(betResults[7])
-                .setNumberOfGamesWith12Hits(betResults[8])
-                .setPrizeFor12Hits(betResults[9])
-                .setNumberOfGamesWith11Hits(betResults[10])
-                .setPrizeFor11Hits(betResults[11])
-                .setNumberOfGamesWith10Hits(betResults[12])
-                .setPrizeFor10Hits(betResults[13])
-                .setOutcomes(Arrays.copyOfRange(betResults, 14, betResults.length))
+    private ResultDto buildResultDto(String[] betResults) {
+        return ResultDto.builder()
+                .year(betResults[0])
+                .week(betResults[1])
+                .round(betResults[2])
+                .date(betResults[3])
+                .numberOfGamesWith14Hits(betResults[4])
+                .prizeFor14Hits(betResults[5])
+                .numberOfGamesWith13Hits(betResults[6])
+                .prizeFor13Hits(betResults[7])
+                .numberOfGamesWith12Hits(betResults[8])
+                .prizeFor12Hits(betResults[9])
+                .numberOfGamesWith11Hits(betResults[10])
+                .prizeFor11Hits(betResults[11])
+                .numberOfGamesWith10Hits(betResults[12])
+                .prizeFor10Hits(betResults[13])
+                .outcomes(Arrays.copyOfRange(betResults, 14, betResults.length))
                 .build();
     }
 
-    static int getLargestPrize(List<ResultDto> resultList) {
+    int getLargestPrize(List<ResultDto> resultList) {
         int[] resultArray = getAllPrizeValues(resultList);
         Arrays.sort(resultArray);
         return resultArray[resultArray.length - 1];
     }
 
-    private static int[] getAllPrizeValues(List<ResultDto> resultList) {
+    private int[] getAllPrizeValues(List<ResultDto> resultList) {
         int[] prizesValues = new int[resultList.size() * 5];
         int index = 0;
         for (ResultDto aResultList : resultList) {

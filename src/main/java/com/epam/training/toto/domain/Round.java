@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 public class Round {
 
-    public static Map<Integer, List<String>> incorrectDataStrings = new TreeMap<>();
     private static int winVariants = OutcomeEnum.values().length;
+    public Map<Integer, List<String>> incorrectDataStrings = new TreeMap<>();
+    private FormatCheckService formatCheckService;
+    private CalculationService calculationService;
 
-    public static double[][] getAllGamesEachTeamResults(List<ResultDto> resultList) {
+    public double[][] getAllGamesEachTeamResults(List<ResultDto> resultList) {
         double[][] outcomesList = new double[resultList.size()][winVariants];
 
         for (int i = 0; i < outcomesList.length; i++) {
@@ -26,7 +27,7 @@ public class Round {
         return outcomesList;
     }
 
-    private static double[] getGameEachTeamResults(String[] outcomes, int stringNumber) {
+    private double[] getGameEachTeamResults(String[] outcomes, int stringNumber) {
         int team1, team2, draw;
         team1 = team2 = draw = 0;
         double[] result = new double[winVariants];
@@ -35,14 +36,14 @@ public class Round {
 
         for (int i = 0; i < outcomes.length; i++) {
             if (i != lastArrayElement) {
-                if (!FormatCheckService.isDataCorrect(outcomes[i])) {
+                if (!formatCheckService.isDataCorrect(outcomes[i])) {
                     listIncorrectStrings.add(outcomes[i]);
-                    outcomes[i] = FormatCheckService.formatValue(outcomes[i]);
+                    outcomes[i] = formatCheckService.formatValue(outcomes[i]);
                 }
             } else {
-                if (!FormatCheckService.isLastGameDataCorrect(outcomes[i])) {
+                if (!formatCheckService.isLastGameDataCorrect(outcomes[i])) {
                     listIncorrectStrings.add(outcomes[i]);
-                    outcomes[i] = FormatCheckService.formatLastRoundValue(outcomes[i]);
+                    outcomes[i] = formatCheckService.formatLastRoundValue(outcomes[i]);
                 }
             }
             if (OutcomeEnum.ONE.getValue().equals(outcomes[i])) {
@@ -58,13 +59,13 @@ public class Round {
         }
 
         int outcomeSum = team1 + team2 + draw;
-        result[0] = CalculationService.calcTeamWinPercentage(outcomeSum, team1);
-        result[1] = CalculationService.calcTeamWinPercentage(outcomeSum, team2);
-        result[2] = CalculationService.calcTeamWinPercentage(outcomeSum, draw);
+        result[0] = calculationService.calcTeamWinPercentage(outcomeSum, team1);
+        result[1] = calculationService.calcTeamWinPercentage(outcomeSum, team2);
+        result[2] = calculationService.calcTeamWinPercentage(outcomeSum, draw);
         return result;
     }
 
-    public static Pair<Integer, String[]> getResultIndexAndOutcomesListByDateValue(List<ResultDto> resultDtoList, String dateValue) {
+    Pair<Integer, String[]> getResultIndexAndOutcomesListByDateValue(List<ResultDto> resultDtoList, String dateValue) {
         String[] actualOutcomes = new String[0];
         int actualStringIndex = 0;
 
@@ -77,7 +78,7 @@ public class Round {
         return new Pair<>(actualStringIndex, actualOutcomes);
     }
 
-    public static boolean checkResultWithDateExist(List<ResultDto> resultDtoList, String enteredDate) {
+    public boolean checkResultWithDateExist(List<ResultDto> resultDtoList, String enteredDate) {
         for (ResultDto resultDto : resultDtoList) {
             if (enteredDate.equals(resultDto.getDate())) {
                 return true;
